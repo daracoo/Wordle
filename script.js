@@ -15,8 +15,8 @@ async function init(){
         letters[ANSWER_LENGTH * currentRow + currentGuess.length - 1].innerText = letter; //da gi vpisi vo kvadratcinata bukvite
     }
 
-    async function commit(){
-        if(currentGuess.length !== ANSWER_LENGTH){ // ako imame stegnato enter pred krajo na zboro da prekini so izvrsuvanje
+    async function commit() {
+        if (currentGuess.length !== ANSWER_LENGTH) { // ako imame stegnato enter pred krajo na zboro da prekini so izvrsuvanje
             return;
         }
 
@@ -30,6 +30,10 @@ async function init(){
         currentGuess = '';
     }
 
+    function backspace(){ // za brisenje na bukvi
+        currentGuess = currentGuess.substring(0, currentGuess.length - 1);
+        letters[ANSWER_LENGTH * currentRow + currentGuess.length].innerText = "";
+    }
 
     document.addEventListener('keydown', function handleKeyPress(event){
          const action = event.key; // go zema kopceto so go stegame na tastatura
