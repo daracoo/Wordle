@@ -1,17 +1,20 @@
 const letters = document.querySelectorAll('.scoreboard-letter');
 const loadingDiv = document.querySelector('.info-bar');
 const ANSWER_LENGTH = 5;
+const ROUNDS = 6;
 
 async function init(){
     let currentGuess = '';
     let currentRow = 0;
-
+    let isLoading = true;
 
     const res = await fetch("https://words.dev-apis.com/word-of-the-day");
     const resObj = await res.json();
     const word = resObj.word.toUpperCase();
     const wordsParts = word.split("");
+    let done = false;
     setLoading(false);
+    isLoading = false;
 
     function addLetter (letter){
         if(currentGuess.length < ANSWER_LENGTH){
@@ -28,9 +31,10 @@ async function init(){
             return;
         }
 
+
         //TODO: validacija na zbor
 
-        //TODO: markiranje na dali e tocno, blisku ili netocno
+        //markiranje na dali e tocno, blisku ili netocno
 
         const guessParts = currentGuess.split("")
         const map = makeMap(wordsParts);
@@ -56,9 +60,17 @@ async function init(){
             }
         }
 
-        //TODO: dali korisnikot pobedil ili ne?
-
         currentRow++;
+        
+        // Dali pobedil ili izgubil
+        if(currentGuess === word){
+            //win
+            alert('You win!');
+            done = true;
+            return;
+        }else if(currentRow === ROUNDS){
+            alert('You lose the word was ' + word)
+        }
         currentGuess = '';
     }
 
@@ -68,6 +80,11 @@ async function init(){
     }
 
     document.addEventListener('keydown', function handleKeyPress(event){
+        if(done || isLoading){
+            return;
+        }
+
+
          const action = event.key; // go zema kopceto so go stegame na tastatura
 
         if(action === 'Enter'){
@@ -92,7 +109,7 @@ function setLoading(isLoading){ // da ja nema ikonata otkako ce se vcita stranat
 
 function makeMap(array){
     const obj = {};
-    for(let o = 0; i<array.length; i++){
+    for(let i = 0; i<array.length; i++){
         const letter = array[i]
         if(obj[letter]){
             obj[letter]++;
