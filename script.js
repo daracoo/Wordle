@@ -30,9 +30,9 @@ async function init(){
         if (currentGuess.length !== ANSWER_LENGTH) { // ako imame stegnato enter pred krajo na zboro da prekini so izvrsuvanje
             return;
         }
-
-
+        
         //validacija na zbor, dali zboro postoj vo recnik
+        //TODO: validacija na zbor, dali zboro postoj vo recnik
         isLoading = true;
         setLoading(true);
         const res = await fetch("https://words.dev-apis.com/validate-word", {
