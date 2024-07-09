@@ -10,6 +10,7 @@ async function init(){
     const res = await fetch("https://words.dev-apis.com/word-of-the-day");
     const resObj = await res.json();
     const word = resObj.word.toUpperCase();
+    const wordsParts = word.split("");
     setLoading(false);
 
     function addLetter (letter){
@@ -30,6 +31,30 @@ async function init(){
         //TODO: validacija na zbor
 
         //TODO: markiranje na dali e tocno, blisku ili netocno
+
+        const guessParts = currentGuess.split("")
+        const map = makeMap(wordsParts);
+
+        for(let i = 0; i < ANSWER_LENGTH; i++){
+           //mark as correct
+           if(guessParts[i] === wordsParts[i]){
+               letters[currentRow * ANSWER_LENGTH + i].classList.add("correct");
+               map[guessParts[i]]--;
+           }
+        }
+
+        for (let i  =0; i< ANSWER_LENGTH; i++){
+            if(guessParts[i] === wordsParts[i]){
+
+            }
+            else if (wordsParts.includes(guessParts[i]) && map[guessParts[i]]>0){
+                //mark as close
+                letters[currentRow * ANSWER_LENGTH + i].classList.add("close");
+                map[guessParts[i]]--;
+            }else{
+                letters[currentRow * ANSWER_LENGTH + i].classList.add("wrong");
+            }
+        }
 
         //TODO: dali korisnikot pobedil ili ne?
 
@@ -63,6 +88,19 @@ function isLetter(letter) {
 
 function setLoading(isLoading){ // da ja nema ikonata otkako ce se vcita stranata
     loadingDiv.classList.add('hidden', !isLoading);
+}
+
+function makeMap(array){
+    const obj = {};
+    for(let o = 0; i<array.length; i++){
+        const letter = array[i]
+        if(obj[letter]){
+            obj[letter]++;
+        }else {
+            obj[letter] = 1;
+        }
+    }
+    return obj;
 }
 
 init();
